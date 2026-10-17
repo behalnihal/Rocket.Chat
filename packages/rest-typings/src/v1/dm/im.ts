@@ -60,10 +60,7 @@ export type ImEndpoints = {
 	};
 	'/v1/im.members': {
 		GET: (params: DmMemberProps) => PaginatedResult<{
-			members: (Pick<
-				IUser,
-				'_id' | 'status' | 'statusText' | 'name' | 'username' | 'utcOffset' | 'federated' | 'freeSwitchExtension'
-			> & {
+			members: (Pick<IUser, '_id' | 'status' | 'statusText' | 'name' | 'username' | 'utcOffset' | 'federated' | 'freeSwitchExtension'> & {
 				subscription: Partial<Pick<ISubscription, '_id' | 'status' | 'ts' | 'roles'>>;
 			})[];
 		}>;

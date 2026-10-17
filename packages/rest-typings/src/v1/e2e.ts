@@ -56,10 +56,7 @@ export type E2eEndpoints = {
 	};
 	'/v1/e2e.provideUsersSuggestedGroupKeys': {
 		POST: (params: {
-			usersSuggestedGroupKeys: Record<
-				IRoom['_id'],
-				{ _id: IUser['_id']; key: string; oldKeys: ISubscription['suggestedOldRoomKeys'] }[]
-			>;
+			usersSuggestedGroupKeys: Record<IRoom['_id'], { _id: IUser['_id']; key: string; oldKeys: ISubscription['suggestedOldRoomKeys'] }[]>;
 		}) => void;
 	};
 	'/v1/e2e.resetRoomKey': {
