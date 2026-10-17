@@ -393,7 +393,7 @@ const saveNotificationBodySchema = ajv.compile<{
 	additionalProperties: false,
 });
 
-const saveNotificationResponseSchema = ajv.compile({
+const saveNotificationResponseSchema = ajv.compile<{ success: boolean }>({
 	type: 'object',
 	properties: {
 		success: { type: 'boolean', enum: [true] },

@@ -23,7 +23,10 @@ const removeInviteResponseSchema = ajv.compile<boolean>({
 	enum: [true],
 });
 
-const useInviteTokenResponseSchema = ajv.compile({
+const useInviteTokenResponseSchema = ajv.compile<{
+	room: { rid: string; prid?: string | null; fname?: string | null; name?: string | null; t: string };
+	success: boolean;
+}>({
 	type: 'object',
 	properties: {
 		room: {

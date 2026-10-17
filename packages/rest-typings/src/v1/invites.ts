@@ -92,7 +92,10 @@ export type InvitesEndpoints = {
 		DELETE: (params?: never) => boolean;
 	};
 	'/v1/useInviteToken': {
-		POST: (params: UseInviteTokenProps) => unknown;
+		POST: (params: UseInviteTokenProps) => {
+			room: { rid: string; prid?: string | null; fname?: string | null; name?: string | null; t: string };
+			success: boolean;
+		};
 	};
 	'/v1/validateInviteToken': {
 		POST: (params: ValidateInviteTokenProps) => { valid: boolean };

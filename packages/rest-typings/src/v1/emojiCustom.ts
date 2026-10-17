@@ -67,9 +67,9 @@ export type EmojiCustomEndpoints = {
 		POST: (params?: never) => void;
 	};
 	'/v1/emoji-custom.update': {
-		POST: (params?: never) => unknown;
+		POST: (params?: never) => void;
 	};
 	'/v1/emoji-custom.delete': {
-		POST: (params: unknown) => void;
+		POST: (params: { emojiId: string }) => void;
 	};
 };

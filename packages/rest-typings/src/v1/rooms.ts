@@ -928,7 +928,7 @@ export type RoomsEndpoints = {
 	};
 
 	'/v1/rooms.saveNotification': {
-		POST: (params: { roomId: string; notifications: Record<string, string> }) => unknown;
+		POST: (params: { roomId: string; notifications: Record<string, string> }) => { success: boolean };
 	};
 
 	'/v1/rooms.saveDraft': {

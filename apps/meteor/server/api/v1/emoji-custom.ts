@@ -24,7 +24,7 @@ import { findEmojisCustom } from '../lib/emoji-custom';
 import { getPaginationItems } from '../lib/getPaginationItems';
 import { getUploadFormData } from '../lib/getUploadFormData';
 
-const emojiDeleteBodySchema = ajv.compile({
+const emojiDeleteBodySchema = ajv.compile<{ emojiId: string }>({
 	type: 'object',
 	properties: { emojiId: { type: 'string', minLength: 1 } },
 	required: ['emojiId'],
@@ -241,7 +241,7 @@ const emojiCustomCreateEndpoints = API.v1
 		{
 			authRequired: true,
 			response: {
-				200: ajv.compile({
+				200: ajv.compile<void>({
 					type: 'object',
 					properties: { success: { type: 'boolean', enum: [true] } },
 					required: ['success'],
