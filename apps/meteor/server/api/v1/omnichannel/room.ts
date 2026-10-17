@@ -389,7 +389,7 @@ const livechatVisitorDepartmentTransfer = API.v1.post(
 			return API.v1.failure('error-transfering-chat');
 		}
 
-		return API.v1.success();
+		return API.v1.success({ success: true });
 	},
 );
 
