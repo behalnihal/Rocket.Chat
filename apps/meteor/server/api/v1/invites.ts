@@ -1,4 +1,4 @@
-import type { IInvite } from '@rocket.chat/core-typings';
+import type { IInvite, IRoom } from '@rocket.chat/core-typings';
 import {
 	ajv,
 	isFindOrCreateInviteParams,
@@ -24,7 +24,7 @@ const removeInviteResponseSchema = ajv.compile<boolean>({
 });
 
 const useInviteTokenResponseSchema = ajv.compile<{
-	room: { rid: string; prid?: string | null; fname?: string | null; name?: string | null; t: string };
+	room: { rid: IRoom['_id']; prid: IRoom['prid']; fname: IRoom['fname']; name: IRoom['name']; t: IRoom['t'] };
 	success: boolean;
 }>({
 	type: 'object',

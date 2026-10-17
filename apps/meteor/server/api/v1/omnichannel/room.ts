@@ -335,7 +335,7 @@ const livechatVisitorDepartmentTransfer = API.v1.post(
 	'livechat/visitor/department.transfer',
 	{
 		response: {
-			200: ajv.compile<void>({
+			200: ajv.compile<{ success: boolean }>({
 				type: 'object',
 				properties: {
 					success: {

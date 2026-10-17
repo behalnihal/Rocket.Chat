@@ -696,7 +696,7 @@ const dmMessagesAction = <Path extends string>(_path: Path): TypedAction<typeof 
 		});
 	};
 
-const dmHistoryResponseSchema = ajv.compile<Record<string, unknown>>({
+const dmHistoryResponseSchema = ajv.compile<{ messages: IMessage[]; firstUnread?: IMessage; unreadNotLoaded?: number }>({
 	type: 'object',
 	properties: {
 		messages: { type: 'array', items: { $ref: '#/components/schemas/IMessage' } },
@@ -749,7 +749,7 @@ const dmHistoryAction = <Path extends string>(_path: Path): TypedAction<typeof d
 			return API.v1.forbidden();
 		}
 
-		return API.v1.success(result as Record<string, unknown>);
+		return API.v1.success(result as { messages: IMessage[]; firstUnread?: IMessage; unreadNotLoaded?: number });
 	};
 
 const dmCreateResponseSchema = ajv.compile<{ room: IRoom & { rid: string } }>({

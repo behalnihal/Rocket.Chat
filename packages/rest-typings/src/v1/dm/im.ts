@@ -69,7 +69,7 @@ export type ImEndpoints = {
 		GET: (params: DmMessagesProps) => { messages: IMessage[]; count: number; offset: number; total: number };
 	};
 	'/v1/im.history': {
-		GET: (params: DmHistoryProps) => Record<string, unknown>;
+		GET: (params: DmHistoryProps) => { messages: IMessage[]; firstUnread?: IMessage; unreadNotLoaded?: number };
 	};
 	'/v1/im.messages.others': {
 		GET: (params?: never) => { messages: IMessage[]; offset: number; count: number; total: number };

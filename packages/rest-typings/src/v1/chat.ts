@@ -1,4 +1,4 @@
-import type { IMessage, IRoom, MessageAttachment, IReadReceiptWithUser, IThreadMainMessage } from '@rocket.chat/core-typings';
+import type { IMessage, IRoom, MessageAttachment, IReadReceiptWithUser, IThreadMainMessage, MessageUrl } from '@rocket.chat/core-typings';
 
 import { ajv, ajvQuery } from './Ajv';
 import type { PaginatedRequest } from '../helpers/PaginatedRequest';
@@ -1087,7 +1087,7 @@ export type ChatEndpoints = {
 		};
 	};
 	'/v1/chat.getURLPreview': {
-		GET: (params: ChatGetURLPreview) => { urlPreview: object };
+		GET: (params: ChatGetURLPreview) => { urlPreview: MessageUrl };
 	};
 	'/v1/chat.getMessages': {
 		POST: (params: ChatGetMessages) => { messages: IMessage[] };

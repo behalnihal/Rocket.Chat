@@ -47,11 +47,10 @@ import type { TwoFactorChallengesEndpoints } from './v1/twoFactorChallenges';
 import type { UsersEndpoints } from './v1/users';
 import type { VideoConferenceEndpoints } from './v1/videoConference';
 
-// Families fully typed by their migrated implementations (via
-// ExtractRoutesFromAPI module augmentation in apps/meteor/server/api/v1)
-// have no entry here: dm, e2e, emoji-custom, invites, push, roles. Others
-// (chat, im, rooms) keep only their legacy API.v1.addRoute declarations.
-// See docs/typescript-7-migration.md.
+// Every family is listed here as the published contract. Migrated families keep a
+// hand-written declaration identical to their ExtractRoutesFromAPI augmentation in
+// apps/meteor (both merge into Endpoints without conflict), so SDK/external consumers
+// that don't compile apps/meteor still see every route. See docs/typescript-7-migration.md.
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface Endpoints
 	extends AISearchEndpoints,

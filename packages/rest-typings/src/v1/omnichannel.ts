@@ -4939,7 +4939,7 @@ export type OmnichannelEndpoints = {
 		POST: (params: POSTLivechatRoomCloseByUserParams) => void;
 	};
 	'/v1/livechat/visitor/department.transfer': {
-		POST: (params: POSTLivechatVisitorDepartmentTransferParams) => void;
+		POST: (params: POSTLivechatVisitorDepartmentTransferParams) => { success: boolean };
 	};
 	'/v1/livechat/room.survey': {
 		POST: (params: POSTLivechatRoomSurveyParams) => { rid: string; data: unknown };

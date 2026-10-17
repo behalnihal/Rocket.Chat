@@ -4,6 +4,7 @@ import type { TeamsAddMembersProps } from './TeamsAddMembersProps';
 import type { TeamsConvertToChannelProps } from './TeamsConvertToChannelProps';
 import type { TeamsCreateProps } from './TeamsCreateProps';
 import type { TeamsDeleteProps } from './TeamsDeleteProps';
+import type { TeamsInfoProps } from './TeamsInfoProps';
 import type { TeamsLeaveProps } from './TeamsLeaveProps';
 import type { TeamsListChildrenProps } from './TeamsListChildren';
 import type { TeamsRemoveMemberProps } from './TeamsRemoveMemberProps';
@@ -117,7 +118,7 @@ export type TeamsEndpoints = {
 	};
 
 	'/v1/teams.info': {
-		GET: (params: ({ teamId: string } | { teamName: string }) & Record<string, string | number | boolean | object>) => {
+		GET: (params: TeamsInfoProps) => {
 			teamInfo: ITeam;
 		};
 	};

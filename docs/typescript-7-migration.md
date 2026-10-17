@@ -115,21 +115,26 @@ The canary (`scripts/ts7-typecheck.sh`) is green for all 73 workspace
 tsconfigs. TS7 rejects the `Endpoints` interface simultaneously extending a
 legacy hand-written family type from `@rocket.chat/rest-typings` and the
 `ExtractRoutesFromAPI` augmentation the migrated implementation declares
-(error TS2320) when the two declarations differ; TS5.9 tolerated it. The
-dedup resolved this by making the augmentation authoritative wherever one
-exists:
+(error TS2320) when the two declarations differ; TS5.9 tolerated it. This
+was resolved by reconciling the two declarations — keeping the hand-written
+rest-typings family types (so the published contract stays complete for SDK
+and external consumers that don't compile `apps/meteor`) and making each one
+identical to its `ExtractRoutesFromAPI` augmentation:
 
-- Every migrated route is typed only by its `ExtractRoutesFromAPI`
-  augmentation — the hand-written declarations were deleted from
-  rest-typings (chat, dm/im, e2e, emoji-custom, invites, push, roles,
-  rooms, teams families and the omnichannel department-transfer route).
-  Standalone registrations (`API.v1.get(...)` calls outside a builder
-  chain, e.g. most `/v1/rooms.*`) are captured into named consts and
-  intersected into the family's extracted type. Where the extracted emit
-  was weaker than the old hand-written claim, the route's own schemas were
-  strengthened (typed `ajv.compile` generics, query validators); where the
-  old claim was a lie (e.g. `roles.list` never returns `_updatedAt` — the
-  projection strips it), the consumers were fixed to the truthful type.
+- Every migrated route keeps a hand-written declaration in rest-typings
+  (chat, dm/im, e2e, emoji-custom, invites, push, roles, rooms, teams
+  families and the omnichannel department-transfer route) that is byte-
+  identical to the implementation-derived type, so both merge into
+  `Endpoints` without TS2320. Standalone registrations (`API.v1.get(...)`
+  calls outside a builder chain, e.g. most `/v1/rooms.*`) are mirrored too.
+  Where the extracted emit was weaker than the real response, the route's
+  own `ajv.compile` generic was strengthened at the source (e.g.
+  `chat.getURLPreview`, `im.history`, `teams.*` rooms/members, `roles.sync`)
+  so both sides stay rich and accurate — never loosened to `object`/`any`.
+  Where the old public claim was a lie (e.g. `roles.list` never returns
+  `_updatedAt` — the projection strips it), it was corrected to the truthful
+  type. Because both declarations merge, any future drift re-triggers TS2320,
+  keeping them in sync with no new tooling.
 - Only routes still registered via the legacy `API.v1.addRoute`
   (`/v1/rooms.media/:rid`, `/v1/rooms.mediaConfirm/:rid/:fileId`,
   `/v1/chat.getMessageReadReceipts`, `/v1/im.kick`, ...) keep their

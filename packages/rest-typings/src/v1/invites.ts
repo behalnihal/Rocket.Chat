@@ -93,7 +93,7 @@ export type InvitesEndpoints = {
 	};
 	'/v1/useInviteToken': {
 		POST: (params: UseInviteTokenProps) => {
-			room: { rid: string; prid?: string | null; fname?: string | null; name?: string | null; t: string };
+			room: { rid: IRoom['_id']; prid: IRoom['prid']; fname: IRoom['fname']; name: IRoom['name']; t: IRoom['t'] };
 			success: boolean;
 		};
 	};
