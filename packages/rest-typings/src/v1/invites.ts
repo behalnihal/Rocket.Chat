@@ -1,4 +1,4 @@
-import type { IRoom } from '@rocket.chat/core-typings';
+import type { IInvite, IRoom } from '@rocket.chat/core-typings';
 import type { JSONSchemaType } from 'ajv';
 
 import { ajv } from './Ajv';
@@ -77,3 +77,27 @@ const SendInvitationEmailParamsSchema: JSONSchemaType<SendInvitationEmailParams>
 };
 
 export const isSendInvitationEmailParams = ajv.compile<SendInvitationEmailParams>(SendInvitationEmailParamsSchema);
+
+// Public mirror of the implementation-derived routes (apps/meteor/server/api/v1/invites.ts,
+// `ExtractRoutesFromAPI<typeof invites>`). Kept identical so the two declarations merge without
+// TS2320, and so SDK/external consumers that don't compile apps/meteor keep these routes.
+export type InvitesEndpoints = {
+	'/v1/listInvites': {
+		GET: (params?: never) => IInvite[];
+	};
+	'/v1/findOrCreateInvite': {
+		POST: (params: FindOrCreateInviteParams) => IInvite;
+	};
+	'/v1/removeInvite/:_id': {
+		DELETE: (params?: never) => boolean;
+	};
+	'/v1/useInviteToken': {
+		POST: (params: UseInviteTokenProps) => unknown;
+	};
+	'/v1/validateInviteToken': {
+		POST: (params: ValidateInviteTokenProps) => { valid: boolean };
+	};
+	'/v1/sendInvitationEmail': {
+		POST: (params: SendInvitationEmailParams) => { success: boolean };
+	};
+};

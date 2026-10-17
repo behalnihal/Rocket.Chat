@@ -16,14 +16,16 @@ import type { CommandsEndpoints } from './v1/commands';
 import type { CustomUserStatusEndpoints } from './v1/customUserStatus';
 import type { E2eEndpoints } from './v1/e2e';
 import type { DirectoryEndpoint } from './v1/directory';
-import type { ImEndpoints } from './v1/dm';
+import type { DmEndpoints, ImEndpoints } from './v1/dm';
 import type { EmailInboxEndpoints } from './v1/email-inbox';
+import type { EmojiCustomEndpoints } from './v1/emojiCustom';
 import type { FederationEndpoints } from './v1/federation';
 import type { GroupsEndpoints } from './v1/groups';
 import type { ImportEndpoints } from './v1/import';
 import type { InstancesEndpoints } from './v1/instances';
 import type { IntegrationsEndpoints } from './v1/integrations';
 import type { IntegrationHooksEndpoints } from './v1/integrations/hooks';
+import type { InvitesEndpoints } from './v1/invites';
 import type { LDAPEndpoints } from './v1/ldap';
 import type { LicensesEndpoints } from './v1/licenses';
 import type { MailerEndpoints } from './v1/mailer';
@@ -32,6 +34,8 @@ import type { MiscEndpoints } from './v1/misc';
 import type { ModerationEndpoints } from './v1/moderation';
 import type { OmnichannelEndpoints } from './v1/omnichannel';
 import type { PresenceEndpoints } from './v1/presence';
+import type { PushEndpoints } from './v1/push';
+import type { RolesEndpoints } from './v1/roles';
 import type { RoomsEndpoints } from './v1/rooms';
 import type { ServerEventsEndpoints } from './v1/server-events';
 import type { SettingsEndpoints } from './v1/settings';
@@ -92,6 +96,11 @@ export interface Endpoints
 		ServerEventsEndpoints,
 		TwoFactorChallengesEndpoints,
 		E2eEndpoints,
+		DmEndpoints,
+		EmojiCustomEndpoints,
+		InvitesEndpoints,
+		PushEndpoints,
+		RolesEndpoints,
 		DefaultEndpoints {}
 
 type OperationsByPathPatternAndMethod<

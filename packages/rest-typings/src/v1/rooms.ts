@@ -1,4 +1,16 @@
-import type { IMessage, IRoom, IUser, IE2EEMessage, MessageTypesValues } from '@rocket.chat/core-typings';
+import type {
+	IMessage,
+	IRoom,
+	IRoomAbacRedaction,
+	IUser,
+	IE2EEMessage,
+	ITeam,
+	ISubscription,
+	IUpload,
+	MessageTypesValues,
+	RequiredField,
+	RoomAdminFieldsType,
+} from '@rocket.chat/core-typings';
 
 import { ajv, ajvQuery } from './Ajv';
 import type { PaginatedRequest } from '../helpers/PaginatedRequest';
@@ -875,11 +887,12 @@ const roomsInvitePropsSchema = {
 
 export const isRoomsInviteProps = ajv.compile<RoomsInviteProps>(roomsInvitePropsSchema);
 
+// Public mirror of the implementation-derived routes (apps/meteor/server/api/v1/rooms.ts,
+// `ExtractRoutesFromAPI<typeof ...>`). Kept identical so the two declarations merge into the
+// global `Endpoints` without TS2320, and so SDK/external consumers that don't compile
+// apps/meteor keep every rooms route. Only `rooms.media(/:rid|Confirm)` are still legacy
+// `API.v1.addRoute` routes with no impl-derived type, so they live only here.
 export type RoomsEndpoints = {
-	// Routes still registered via the legacy API.v1.addRoute (not the validated
-	// builder) keep their declarations here until they are migrated. Every
-	// other /v1/rooms.* route is typed by its migrated implementation
-	// (apps/meteor/server/api/v1/rooms.ts) via ExtractRoutesFromAPI.
 	'/v1/rooms.media/:rid': {
 		POST: (params: { file: File }) => { file: { url: string } };
 	};
@@ -899,6 +912,188 @@ export type RoomsEndpoints = {
 			fileContent?: IE2EEMessage['content'];
 		}) => {
 			message: IMessage | null;
+		};
+	};
+
+	'/v1/rooms.nameExists': {
+		GET: (params: GETRoomsNameExists) => { exists: boolean };
+	};
+
+	'/v1/rooms.delete': {
+		POST: (params: { roomId: string }) => void;
+	};
+
+	'/v1/rooms.get': {
+		GET: (params?: never) => { update: IRoom[]; remove: IRoom[] };
+	};
+
+	'/v1/rooms.saveNotification': {
+		POST: (params: { roomId: string; notifications: Record<string, string> }) => unknown;
+	};
+
+	'/v1/rooms.saveDraft': {
+		POST: (params: { rid: IRoom['_id']; draft: string; tmid?: IMessage['_id'] }) => void;
+	};
+
+	'/v1/rooms.cleanHistory': {
+		POST: (params: RoomsCleanHistoryProps) => { _id: string; count: number };
+	};
+
+	'/v1/rooms.info': {
+		GET: (params: RoomsInfoProps) => {
+			room: IRoom | null;
+			parent?: Pick<IRoom, '_id' | 'name' | 'fname' | 't'> & Partial<Pick<IRoom, 'prid' | 'u'>>;
+			team?: Pick<ITeam, 'name' | 'roomId' | 'type'>;
+		};
+	};
+
+	'/v1/rooms.createDiscussion': {
+		POST: (params: RoomsCreateDiscussionProps) => { discussion: IRoom };
+	};
+
+	'/v1/rooms.getDiscussions': {
+		GET: (params?: never) => {
+			discussions: IRoom[];
+			count: number;
+			offset: number;
+			total: number;
+		};
+	};
+
+	'/v1/rooms.images': {
+		GET: (params: RoomsImagesProps) => {
+			files: IUpload[];
+			count: number;
+			offset: number;
+			total: number;
+		};
+	};
+
+	'/v1/rooms.adminRooms': {
+		GET: (params: RoomsAdminRoomsProps) => {
+			rooms: Array<Pick<IRoom, RoomAdminFieldsType> & IRoomAbacRedaction>;
+			count: number;
+			offset: number;
+			total: number;
+		};
+	};
+
+	'/v1/rooms.autocomplete.adminRooms': {
+		GET: (params: RoomsAutocompleteAdminRoomsPayload) => { items: IRoom[] };
+	};
+
+	'/v1/rooms.adminRooms.getRoom': {
+		GET: (params: RoomsAdminRoomsGetRoomProps) => Pick<IRoom, RoomAdminFieldsType> & IRoomAbacRedaction;
+	};
+
+	'/v1/rooms.adminRooms.privateRooms': {
+		GET: (params: { filter?: string; offset?: number; count?: number; sort?: string }) => {
+			rooms: Array<Pick<IRoom, RoomAdminFieldsType> & IRoomAbacRedaction>;
+			count: number;
+			offset: number;
+			total: number;
+		};
+	};
+
+	'/v1/rooms.autocomplete.channelAndPrivate': {
+		GET: (params: RoomsAutoCompleteChannelAndPrivateProps) => { items: IRoom[] };
+	};
+
+	'/v1/rooms.autocomplete.channelAndPrivate.withPagination': {
+		GET: (params: RoomsAutocompleteChannelAndPrivateWithPaginationProps) => { items: IRoom[]; total: number };
+	};
+
+	'/v1/rooms.autocomplete.availableForTeams': {
+		GET: (params: RoomsAutocompleteAvailableForTeamsProps) => { items: IRoom[] };
+	};
+
+	'/v1/rooms.saveRoomSettings': {
+		POST: (params: RoomsSaveRoomSettingsProps) => { rid: string };
+	};
+
+	'/v1/rooms.changeArchivationState': {
+		POST: (params: RoomsChangeArchivationStateProps) => void;
+	};
+
+	'/v1/rooms.export': {
+		POST: (params: RoomsExportProps) => void | { missing: string[] };
+	};
+
+	'/v1/rooms.isMember': {
+		GET: (params: RoomsIsMemberProps) => { isMember: boolean };
+	};
+
+	'/v1/rooms.membersOrderedByRole': {
+		GET: (params: RoomsMembersOrderedByRoleProps) => {
+			members: (IUser & { subscription: Pick<ISubscription, '_id' | 'status' | 'ts' | 'roles'> })[];
+			count: number;
+			offset: number;
+			total: number;
+		};
+	};
+
+	'/v1/rooms.muteUser': {
+		POST: (params: RoomsMuteUnmuteUser) => void;
+	};
+
+	'/v1/rooms.unmuteUser': {
+		POST: (params: RoomsMuteUnmuteUser) => void;
+	};
+
+	'/v1/rooms.open': {
+		POST: (params: RoomsOpenProps) => void;
+	};
+
+	'/v1/rooms.join': {
+		POST: (params: RoomsJoinProps) => { room: IRoom };
+	};
+
+	'/v1/rooms.hide': {
+		POST: (params: RoomsHideProps) => void;
+	};
+
+	'/v1/rooms.roles': {
+		GET: (params: { rid: string }) => {
+			roles: { rid: IRoom['_id']; u: { _id: string; username: string; name?: string }; roles: string[] }[];
+		};
+	};
+
+	'/v1/rooms.invite': {
+		POST: (params: RoomsInviteProps) => void;
+	};
+
+	'/v1/rooms.favorite': {
+		POST: (params: { roomId: string; favorite: boolean } | { roomName: string; favorite: boolean }) => void;
+	};
+
+	'/v1/rooms.leave': {
+		POST: (params: { roomId: string } | { roomName: string }) => void;
+	};
+
+	'/v1/rooms.banUser': {
+		POST: (params: RoomsBanUserProps) => void;
+	};
+
+	'/v1/rooms.unbanUser': {
+		POST: (params: RoomsUnbanUserProps) => void;
+	};
+
+	'/v1/rooms.bannedUsers': {
+		GET: (params: RoomsBannedUsersProps) => {
+			success: true;
+			bannedUsers: RequiredField<Pick<IUser, '_id' | 'username' | 'name'>, '_id' | 'username'>[];
+			count: number;
+			offset: number;
+			total: number;
+		};
+	};
+
+	'/v1/rooms.history': {
+		GET: (params: RoomsHistoryProps) => {
+			messages: IMessage[];
+			cursor: { next: string | null; previous: string | null };
+			firstUnread?: IMessage;
+			unreadNotLoaded?: number;
 		};
 	};
 };

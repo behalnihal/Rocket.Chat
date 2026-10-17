@@ -4938,6 +4938,9 @@ export type OmnichannelEndpoints = {
 	'/v1/livechat/room.closeByUser': {
 		POST: (params: POSTLivechatRoomCloseByUserParams) => void;
 	};
+	'/v1/livechat/visitor/department.transfer': {
+		POST: (params: POSTLivechatVisitorDepartmentTransferParams) => void;
+	};
 	'/v1/livechat/room.survey': {
 		POST: (params: POSTLivechatRoomSurveyParams) => { rid: string; data: unknown };
 	};

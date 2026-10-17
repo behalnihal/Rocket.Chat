@@ -1,4 +1,4 @@
-import type { IPushTokenTypes } from '@rocket.chat/core-typings';
+import type { IMessage, IPushNotificationConfig, IPushTokenTypes } from '@rocket.chat/core-typings';
 
 import { ajv, ajvQuery } from './Ajv';
 
@@ -48,3 +48,23 @@ const PushGetPropsSchema = {
 };
 
 export const isPushGetProps = ajvQuery.compile<PushGetProps>(PushGetPropsSchema);
+
+// Public mirror of the implementation-derived routes (apps/meteor/server/api/v1/push.ts,
+// `ExtractRoutesFromAPI<typeof ...>`). Kept identical so the two declarations merge without
+// TS2320, and so SDK/external consumers that don't compile apps/meteor keep these routes.
+export type PushEndpoints = {
+	'/v1/push.get': {
+		GET: (params: PushGetProps) => {
+			data: {
+				message: IMessage;
+				notification: IPushNotificationConfig;
+			};
+		};
+	};
+	'/v1/push.info': {
+		GET: (params?: never) => {
+			pushGatewayEnabled: boolean;
+			defaultPushGateway: boolean;
+		};
+	};
+};

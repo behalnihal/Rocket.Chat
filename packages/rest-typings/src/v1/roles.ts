@@ -1,4 +1,4 @@
-import type { IRole } from '@rocket.chat/core-typings';
+import type { IRole, IUserInRole } from '@rocket.chat/core-typings';
 
 import { ajv, ajvQuery } from './Ajv';
 import type { PaginatedRequest } from '../helpers/PaginatedRequest';
@@ -112,3 +112,49 @@ const RolesGetUsersInRolePropsSchema = {
 };
 
 export const isRolesGetUsersInRoleProps = ajvQuery.compile<RolesGetUsersInRoleProps>(RolesGetUsersInRolePropsSchema);
+
+type RoleSyncProps = {
+	updatedSince?: string;
+};
+
+// Public mirror of the implementation-derived routes (apps/meteor/server/api/v1/roles.ts,
+// `ExtractRoutesFromAPI<typeof rolesRoutes>`). Kept identical so the two declarations merge
+// without TS2320, and so SDK/external consumers that don't compile apps/meteor keep these routes.
+export type RolesEndpoints = {
+	'/v1/roles.list': {
+		GET: (params?: never) => {
+			roles: Omit<IRole, '_updatedAt'>[];
+		};
+	};
+	'/v1/roles.sync': {
+		GET: (params: RoleSyncProps) => {
+			roles: {
+				update: IRole[];
+				remove: IRole[];
+			};
+		};
+	};
+
+	'/v1/roles.addUserToRole': {
+		POST: (params: RoleAddUserToRoleProps) => {
+			role: IRole;
+		};
+	};
+
+	'/v1/roles.getUsersInRole': {
+		GET: (params: RolesGetUsersInRoleProps) => {
+			users: IUserInRole[];
+			total: number;
+		};
+	};
+
+	'/v1/roles.delete': {
+		POST: (params: RoleDeleteProps) => void;
+	};
+
+	'/v1/roles.removeUserFromRole': {
+		POST: (params: RoleRemoveUserFromRoleProps) => {
+			role: IRole;
+		};
+	};
+};
