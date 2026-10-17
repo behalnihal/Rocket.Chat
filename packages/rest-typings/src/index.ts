@@ -14,6 +14,7 @@ import type { ChatEndpoints } from './v1/chat';
 import type { CloudEndpoints } from './v1/cloud';
 import type { CommandsEndpoints } from './v1/commands';
 import type { CustomUserStatusEndpoints } from './v1/customUserStatus';
+import type { E2eEndpoints } from './v1/e2e';
 import type { DirectoryEndpoint } from './v1/directory';
 import type { ImEndpoints } from './v1/dm';
 import type { EmailInboxEndpoints } from './v1/email-inbox';
@@ -90,6 +91,7 @@ export interface Endpoints
 		ImportEndpoints,
 		ServerEventsEndpoints,
 		TwoFactorChallengesEndpoints,
+		E2eEndpoints,
 		DefaultEndpoints {}
 
 type OperationsByPathPatternAndMethod<
